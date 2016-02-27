@@ -30,10 +30,13 @@ def get_user_timeline(screen_name):
 	user_tweets.insert_one(res)
 
 def get_topic_tweets(topic, count):
-	tweets = t.search(q=topic ,count = count,language="en")
+	tweets = t.search(q=topic, count = count,language="en")
 	collections = tweets['statuses']
-	for i in collections:
-		print i['text']
+	res = {}
+	res['topic'] = topic
+	res['tweets'] = [i['text'] for i in collections]
+	topic_tweets.insert_one(res)	
 
 if __name__ == '__main__':
-	get_user_timeline('mashable')
+	#get_user_timeline('mashable')
+	get_topic_tweets('#zika',100)
