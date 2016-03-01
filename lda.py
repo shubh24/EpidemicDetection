@@ -3,7 +3,8 @@ from nltk.tokenize import RegexpTokenizer
 import gensim
 from nltk.corpus import stopwords
 from nltk.tag import pos_tag
-from gensim import corpora
+from gensim import corpora,models
+import numpy as np
 #import pyLDAvis
 #import pyLDAvis.gensim
 #import pyLDAvis.graphlab
@@ -21,10 +22,8 @@ def strip_proppers_POS(text):
 			i = i.lstrip('#')
 		if i[:4] == 'http':
 			continue
-		if len(i) > 1:
-		   if len(i) > 3:
+		if len(i) > 3:
 			master = master+i+" "
-	print master
 	return master
 
 
@@ -40,6 +39,7 @@ def lda_vis(topic):
 		for j in i['tweets']:
 			tweets.append(j.lower())
 	refined_tweets = []
+	c=0
 	for t in tweets:
 		refined_tweets.append(strip_proppers_POS(t))
 	
@@ -53,19 +53,17 @@ def lda_vis(topic):
 	corpus = [dictionary.doc2bow(text) for text in texts]
 
 	
-	try:
-		m = models.LdaModel(corpus,id2word=dictionary,num_topics=10,update_every=5,chunksize=10000,passes=10)
-		topics_matrix = m.show_topics(formatted=False, num_words=5)
-		topics_matrix = np.array(topics_matrix)
-		keywordArray = topics_matrix[:,:,1]
-		keywordArrayProb = topics_matrix[:,:,0]
-	except:
-		print "Error in building LDA Matrix"
-		pass
+	m = models.LdaModel(corpus,id2word=dictionary,num_topics=5,update_every=5,chunksize=10000,passes=10)
+	topics_matrix = m.show_topics(formatted=True, num_words=5)
+	topics_matrix = np.array(topics_matrix)
+	for i in range(0,5,1):
+		print topics_matrix[i,1]
 
-	p = pyLDAvis.gensim.prepare(m,corpus,dictionary)
-	pyLDAvis.show(p)
-	print keywordArray
+	#keywordArray = topics_matrix[:,:,1]
+	#keywordArrayProb = topics_matrix[:,:,0]
+	
+	#p = pyLDAvis.gensim.prepare(m,corpus,dictionary)
+	#pyLDAvis.show(p)
 
 
 
