@@ -23,11 +23,18 @@ t = Twython(app_key='yOc6qbMtrTRJ5QmHpy640yCS9', app_secret='4mPSvT4y7T3auJA3Z5i
 #users = t.lookup_user(user_id = ids)
 
 def get_user_timeline(screen_name):
-	tweets = t.get_user_timeline(screen_name=screen_name)
-	res = {}
-	res['screen_name'] = screen_name
-	res['tweets'] = [i['text'] for i in tweets]
-	user_tweets.insert_one(res)
+	for screen_name in doctors:
+		try:
+			print screen_name
+			tweets = t.get_user_timeline(screen_name=screen_name)
+			res = {}
+			res['screen_name'] = screen_name
+			res['tweets'] = [i['text'] for i in tweets]
+			user_tweets.insert_one(res)
+			print 'inserted'		
+		except:
+			print 'Error from Twython' + screen_name
+			pass
 
 def get_topic_tweets(topic, count):
 	tweets = t.search(q=topic, count = count,language="en")
@@ -38,5 +45,6 @@ def get_topic_tweets(topic, count):
 	topic_tweets.insert_one(res)	
 
 if __name__ == '__main__':
-	#get_user_timeline('mashable')
-	get_topic_tweets('#zika',100)
+	doctors = ['GlenGilmore','RRuth_TSG','StemCellsGlobal','kevinmd','AmerMedicalAssn','RedCross','lescat','ahier','PatientDave','drwalker_rph','PhilBaumann','Health_Affairs','jensmccabe','nursefriendly','lindner_sarah','CHopeMurray','Kamiyamay','OhMyJet','bigzigfitness','giasison','ElinSilveous','GailZahtz','NatriceR','going2medschool','CSlaterMD','andyhubbard','drseisenberg','LAlupusLady','ChatHealth','MandiBPro','RockScarLove','bigfish','MarksPhone','aptainaccess','NAMIOC','ChronicPainGPS','RannPatterson','CortLane','arter4values','Saif_Abed','Mass_Consumer','DrLeanaWen','gordondeb','AtriusHealth','YoungHealthPros','CrystalLaw','althhashtags','ashingtonpost','_NetworkHealth','juscohen']
+	get_user_timeline(doctors)
+	#get_topic_tweets('#zika',100)
