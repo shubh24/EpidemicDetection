@@ -2,7 +2,7 @@ import sys
 import string
 import simplejson
 from twython import Twython
-
+import config
 import datetime
 now = datetime.datetime.now()
 day=int(now.day)
@@ -15,7 +15,7 @@ db = client.epidemic
 user_tweets = db.user_tweets
 topic_tweets = db.topic_tweets
 
-t = Twython(app_key='yOc6qbMtrTRJ5QmHpy640yCS9', app_secret='4mPSvT4y7T3auJA3Z5iytIIRdvKMnOqJug4fHTqeakf5wh4bo0', oauth_token='2892300355-9xhU0WMC91WRUjT80r8mzmrBIUOI9gMfcN7tvuB', oauth_token_secret='TNZ06Pt8hS2OYCVfDDJ1YnP4qQQYkFzL9FaxSptZWFJgk')
+t = Twython(app_key=config.app_key, app_secret=config.app_secret, oauth_token=config.oauth_token, oauth_token_secret=config.oauth_token_secret)
    
 
 #REPLACE WITH YOUR LIST OF TWITTER USER IDS
