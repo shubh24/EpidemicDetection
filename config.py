@@ -1,4 +1,0 @@
-app_key='yOc6qbMtrTRJ5QmHpy640yCS9'
-app_secret='4mPSvT4y7T3auJA3Z5iytIIRdvKMnOqJug4fHTqeakf5wh4bo0'
-oauth_token='2892300355-9xhU0WMC91WRUjT80r8mzmrBIUOI9gMfcN7tvuB'
-oauth_token_secret='TNZ06Pt8hS2OYCVfDDJ1YnP4qQQYkFzL9FaxSptZWFJgk'
