@@ -5,8 +5,8 @@ from nltk.corpus import stopwords
 from nltk.tag import pos_tag
 from gensim import corpora,models
 import numpy as np
-#import pyLDAvis
-#import pyLDAvis.gensim
+import pyLDAvis
+import pyLDAvis.gensim
 #import pyLDAvis.graphlab
 stop = stopwords.words("english")
 
@@ -106,8 +106,8 @@ def lda_user(doctors):
 	#keywordArray = topics_matrix[:,:,1]
 	#keywordArrayProb = topics_matrix[:,:,0]
 	
-	#p = pyLDAvis.gensim.prepare(m,corpus,dictionary)
-	#pyLDAvis.show(p)
+	p = pyLDAvis.gensim.prepare(m,corpus,dictionary)
+	pyLDAvis.show(p)
 
 
 
