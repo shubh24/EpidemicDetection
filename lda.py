@@ -13,11 +13,9 @@ stop = stopwords.words("english")
 def strip_proppers_POS(text):
 	#text = text.encode('ascii','ignore')
 	tagged = pos_tag(text.split()) #use NLTK's part of speech tagger
-	non_adj = [word for word,pos in tagged if pos != 'JJ' and pos != 'JJR' and pos != 'JJS' and word not in stop]
+	non_adj = [word for word,pos in tagged if pos[0] != 'J' and word not in stop and len(word) > 3]
 	master = ""
 	for i in non_adj:
-		if len(i)<3:
-			continue
 		if (i[0] == '@'):
 			i = i.lstrip('@')
 		if (i[0] == '#'):
@@ -44,21 +42,22 @@ def lda_topic(topic):
 	for t in tweets:
 		refined_tweets.append(strip_proppers_POS(t))
 	
-	tokenizer = RegexpTokenizer(r'\w+')
-	texts = []
-	for i in range(0,len(refined_tweets)):
-		texts.append(tokenizer.tokenize(refined_tweets[i]))
-	keywordArray = []
-	dictionary = corpora.Dictionary(texts)
-	dictionary.filter_extremes(no_below=2, no_above=0.8)
-	corpus = [dictionary.doc2bow(text) for text in texts]
+	return refined_tweets
+	# tokenizer = RegexpTokenizer(r'\w+')
+	# texts = []
+	# for i in range(0,len(refined_tweets)):
+	# 	texts.append(tokenizer.tokenize(refined_tweets[i]))
+	# keywordArray = []
+	# dictionary = corpora.Dictionary(texts)
+	# dictionary.filter_extremes(no_below=2, no_above=0.8)
+	# corpus = [dictionary.doc2bow(text) for text in texts]
 
 	
-	m = models.LdaModel(corpus,id2word=dictionary,num_topics=5,update_every=5,chunksize=10000,passes=10)
-	topics_matrix = m.show_topics(formatted=True, num_words=5)
-	topics_matrix = np.array(topics_matrix)
-	for i in range(0,5,1):
-		print topics_matrix[i,1]
+	# m = models.LdaModel(corpus,id2word=dictionary,num_topics=20,update_every=5,chunksize=10000,passes=10)
+	# topics_matrix = m.show_topics(formatted=True, num_words=5)
+	# topics_matrix = np.array(topics_matrix)
+	# for i in range(0,20,1):
+	# 	print topics_matrix[i,1]
 
 	#keywordArray = topics_matrix[:,:,1]
 	#keywordArrayProb = topics_matrix[:,:,0]
@@ -86,6 +85,12 @@ def lda_user(doctors):
 		for t in tweets:
 			refined_tweets.append(strip_proppers_POS(t))
 		print 'done!'
+	return refined_tweets
+
+def lda(doctors, topic):
+	
+	refined_tweets = lda_user(doctors)
+	refined_tweets += lda_topic(topic)
 
 	tokenizer = RegexpTokenizer(r'\w+')
 	texts = []
@@ -97,11 +102,11 @@ def lda_user(doctors):
 	corpus = [dictionary.doc2bow(text) for text in texts]
 
 	
-	m = models.LdaModel(corpus,id2word=dictionary,num_topics=5,update_every=5,chunksize=10000,passes=10)
+	m = models.LdaModel(corpus,id2word=dictionary,num_topics=3,update_every=5,chunksize=10000,passes=10)
 	topics_matrix = m.show_topics(formatted=True, num_words=5)
 	topics_matrix = np.array(topics_matrix)
-	for i in range(0,5,1):
-		print topics_matrix[i,1]
+	#for i in range(0,20,1):
+	#	print topics_matrix[i,1]
 
 	#keywordArray = topics_matrix[:,:,1]
 	#keywordArrayProb = topics_matrix[:,:,0]
@@ -115,5 +120,5 @@ if __name__ == '__main__':
 	#lda_topic('#zika')
 	#doctors = ['GlenGilmore','RRuth_TSG','StemCellsGlobal','kevinmd','AmerMedicalAssn','RedCross','lescat','ahier','PatientDave','drwalker_rph','PhilBaumann','Health_Affairs','jensmccabe','nursefriendly','lindner_sarah','CHopeMurray','Kamiyamay','OhMyJet','bigzigfitness','giasison','ElinSilveous','GailZahtz','NatriceR','going2medschool','CSlaterMD','andyhubbard','drseisenberg','LAlupusLady','ChatHealth','MandiBPro','RockScarLove','bigfish','MarksPhone','aptainaccess','NAMIOC','ChronicPainGPS','RannPatterson','CortLane','arter4values','Saif_Abed','Mass_Consumer','DrLeanaWen','gordondeb','AtriusHealth','YoungHealthPros','CrystalLaw','althhashtags','ashingtonpost','_NetworkHealth','juscohen']	
 	doctors = ['GlenGilmore','RRuth_TSG','StemCellsGlobal','kevinmd','AmerMedicalAssn','RedCross']	
-	lda_user(doctors)
+	lda(doctors, "#zika")
 	

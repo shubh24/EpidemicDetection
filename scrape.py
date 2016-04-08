@@ -1,3 +1,4 @@
+from __future__ import division
 import sys
 import string
 import simplejson
@@ -41,10 +42,26 @@ def get_topic_tweets(topic, count):
 	collections = tweets['statuses']
 	res = {}
 	res['topic'] = topic
+	res['screen_name'] = [i['user']['screen_name'] for i in collections]
 	res['tweets'] = [i['text'] for i in collections]
 	topic_tweets.insert_one(res)	
 
+
+def get_official_ratio(topic, doctors):
+	collections = topic_tweets.find({'topic':topic})
+	official_count = 0
+	total_count = 0
+	for s in collections:
+		tweeters = s['screen_name']
+		for t in tweeters:
+			if t in doctors:
+				official_count += 1
+			total_count += 1
+	return official_count/total_count
+
 if __name__ == '__main__':
-	doctors = ['GlenGilmore','RRuth_TSG','StemCellsGlobal','kevinmd','AmerMedicalAssn','RedCross','lescat','ahier','PatientDave','drwalker_rph','PhilBaumann','Health_Affairs','jensmccabe','nursefriendly','lindner_sarah','CHopeMurray','Kamiyamay','OhMyJet','bigzigfitness','giasison','ElinSilveous','GailZahtz','NatriceR','going2medschool','CSlaterMD','andyhubbard','drseisenberg','LAlupusLady','ChatHealth','MandiBPro','RockScarLove','bigfish','MarksPhone','aptainaccess','NAMIOC','ChronicPainGPS','RannPatterson','CortLane','arter4values','Saif_Abed','Mass_Consumer','DrLeanaWen','gordondeb','AtriusHealth','YoungHealthPros','CrystalLaw','althhashtags','ashingtonpost','_NetworkHealth','juscohen']
-	get_user_timeline(doctors)
+	doctors = ['99Pastimes','GlenGilmore','RRuth_TSG','StemCellsGlobal','kevinmd','AmerMedicalAssn','RedCross','lescat','ahier','PatientDave','drwalker_rph','PhilBaumann','Health_Affairs','jensmccabe','nursefriendly','lindner_sarah','CHopeMurray','Kamiyamay','OhMyJet','bigzigfitness','giasison','ElinSilveous','GailZahtz','NatriceR','going2medschool','CSlaterMD','andyhubbard','drseisenberg','LAlupusLady','ChatHealth','MandiBPro','RockScarLove','bigfish','MarksPhone','aptainaccess','NAMIOC','ChronicPainGPS','RannPatterson','CortLane','arter4values','Saif_Abed','Mass_Consumer','DrLeanaWen','gordondeb','AtriusHealth','YoungHealthPros','CrystalLaw','althhashtags','ashingtonpost','_NetworkHealth','juscohen']
+	#get_user_timeline(doctors)
 	#get_topic_tweets('#zika',100)
+
+	print get_official_ratio('#zika', doctors)
