@@ -42,6 +42,7 @@ def get_topic_tweets(topic, count):
 	collections = tweets['statuses']
 	res = {}
 	res['topic'] = topic
+	res['created_at'] = [int(i['created_at'][11:13]) for i in collections]
 	res['screen_name'] = [i['user']['screen_name'] for i in collections]
 	res['tweets'] = [i['text'] for i in collections]
 	topic_tweets.insert_one(res)	
@@ -62,6 +63,8 @@ def get_official_ratio(topic, doctors):
 if __name__ == '__main__':
 	doctors = ['99Pastimes','GlenGilmore','RRuth_TSG','StemCellsGlobal','kevinmd','AmerMedicalAssn','RedCross','lescat','ahier','PatientDave','drwalker_rph','PhilBaumann','Health_Affairs','jensmccabe','nursefriendly','lindner_sarah','CHopeMurray','Kamiyamay','OhMyJet','bigzigfitness','giasison','ElinSilveous','GailZahtz','NatriceR','going2medschool','CSlaterMD','andyhubbard','drseisenberg','LAlupusLady','ChatHealth','MandiBPro','RockScarLove','bigfish','MarksPhone','aptainaccess','NAMIOC','ChronicPainGPS','RannPatterson','CortLane','arter4values','Saif_Abed','Mass_Consumer','DrLeanaWen','gordondeb','AtriusHealth','YoungHealthPros','CrystalLaw','althhashtags','ashingtonpost','_NetworkHealth','juscohen']
 	#get_user_timeline(doctors)
-	#get_topic_tweets('#zika',100)
+	get_topic_tweets('#zika',1000)
+	get_topic_tweets('#dengue',1000)
 
-	print get_official_ratio('#zika', doctors)
+
+	#print get_official_ratio('#zika', doctors)
